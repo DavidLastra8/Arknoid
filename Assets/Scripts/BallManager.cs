@@ -1,0 +1,75 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+public class BallManager : MonoBehaviour
+{
+    [SerializeField] Rigidbody2D rigidbody;
+    [SerializeField] int speed;
+    [SerializeField] private PlayerMovement player;
+    private Vector2 velocity;
+    private Vector2 startPosition;
+    private SceneManager sceneManager;
+    bool IsAutomatic = false;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+       
+        startPosition = transform.position;
+        StartCoroutine(LaunchBallAfterDelay(2f));
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("DeathCollider"))
+        {
+            player.playerHP--;
+
+            if (player.playerHP == 0)
+            {
+                //sceneManager.GameOver();
+                StopBall();
+                
+            }
+            else
+            {
+                speed = 0;
+                ResetPosition();
+            }
+
+        }
+
+    }
+   
+    public void ResetPosition()
+    {
+        FindObjectOfType<PlayerMovement>().ResetPlayerPosition();
+        BallResetPosition();
+    }
+
+    private void ResetBall()
+    {
+        velocity.x = Random.Range(-1f, 1f);
+        velocity.y = 1f;
+        rigidbody.AddForce(velocity * speed);
+    }
+    private IEnumerator LaunchBallAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ResetBall();
+    }
+    private void BallResetPosition()
+    {
+        transform.position = startPosition;
+        StartCoroutine(LaunchBallAfterDelay(2f));
+    }
+    
+    private void StopBall()
+    {
+        rigidbody.velocity = Vector2.zero;
+        transform.position = startPosition;
+    }
+
+}
