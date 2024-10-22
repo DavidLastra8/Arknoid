@@ -5,6 +5,7 @@ using UnityEngine;
 public class BrickManager : MonoBehaviour
 {
     [SerializeField] int brickHP;
+    [SerializeField] int brickScore;
     private int Lvl1Brick = 35;
 
     private void OnCollisionEnter2D(Collision2D collision)

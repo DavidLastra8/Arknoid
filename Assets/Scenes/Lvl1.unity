@@ -301,6 +301,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (4)
@@ -514,6 +518,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -527,6 +535,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (2)
@@ -715,6 +727,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (5)
@@ -816,6 +832,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -872,6 +892,10 @@ PrefabInstance:
     - target: {fileID: 6569371100122133064, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1058,6 +1082,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1150,6 +1178,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP
@@ -1251,6 +1283,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1264,6 +1300,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (1)
@@ -1462,6 +1502,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1480,6 +1524,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (6)
@@ -1542,6 +1590,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (5)
@@ -1648,6 +1700,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1710,6 +1766,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1771,6 +1831,10 @@ PrefabInstance:
     - target: {fileID: 6569371100122133064, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1874,6 +1938,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1930,6 +1998,10 @@ PrefabInstance:
     - target: {fileID: 6569371100122133064, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1993,6 +2065,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2055,6 +2131,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9131796499206540104, guid: 5e15ccf19ad73844aa0acb391610c9b3, type: 3}
+      propertyPath: brickScore
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2068,6 +2148,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (3)
@@ -2125,6 +2209,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (2)
@@ -2187,6 +2275,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (3)
@@ -2288,6 +2380,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2355,6 +2451,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2368,6 +2468,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP
@@ -2736,6 +2840,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2914,6 +3022,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6693869279358872570, guid: fcf7826a36736ee429c51b722f4d0481, type: 3}
+      propertyPath: brickScore
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2927,6 +3039,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (4)
@@ -3027,6 +3143,10 @@ PrefabInstance:
     - target: {fileID: 6569371100122133064, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3172,6 +3292,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3190,6 +3314,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 63684164516470543, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
+      propertyPath: brickScore
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: f336d4ad0bb66774290bb1c6e6ad2337, type: 3}
       propertyPath: m_Name
       value: Brick5HP (6)
@@ -3379,6 +3507,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3436,6 +3568,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8809697339891417463, guid: 1f0889f687c3e364c9f22867534239f5, type: 3}
+      propertyPath: brickScore
+      value: 300
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3454,6 +3590,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1482055214}
     m_Modifications:
+    - target: {fileID: 2415316282755124805, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
+      propertyPath: brickScore
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6085857321821698116, guid: 096930b303f830b40a0fc71eafa8d5e4, type: 3}
       propertyPath: m_Name
       value: Brick1HP (1)
