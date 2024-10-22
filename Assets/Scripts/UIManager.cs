@@ -10,5 +10,9 @@ public class UIManager: MonoBehaviour
         pauseMenu.SetActive(true);
     }
 
+    public void HidePauseMenu()
+    {
+        pauseMenu.SetActive(false);
+    }
     
 }

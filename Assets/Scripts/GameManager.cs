@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     public void GameOver()
     {
-       
+        
             SceneManager.LoadScene("GameOverScene");
         
     }
@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviour
     public void PauseMenuActivation()
     {
         uiManager.PauseMenu();
+    }
+
+    public void PauseMenuDeActivation()
+    {
+        uiManager.HidePauseMenu();
     }
 
     private void Update()
@@ -30,6 +35,12 @@ public class GameManager : MonoBehaviour
         if (isPausing == true) 
         {
             PauseMenuActivation();
+            Time.timeScale = 0;
+        }
+        else
+        {
+            PauseMenuDeActivation();
+            Time.timeScale = 1;
         }
     }
 }

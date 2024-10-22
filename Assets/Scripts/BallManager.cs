@@ -18,7 +18,7 @@ public class BallManager : MonoBehaviour
     {
        
         startPosition = transform.position;
-        StartCoroutine(LaunchBallAfterDelay(2f));
+        Invoke("ResetBall",2f);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -55,15 +55,11 @@ public class BallManager : MonoBehaviour
         velocity.y = 1f;
         rigidbody.AddForce(velocity * speed);
     }
-    private IEnumerator LaunchBallAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        ResetBall();
-    }
+   
     private void BallResetPosition()
     {
         transform.position = startPosition;
-        StartCoroutine(LaunchBallAfterDelay(2f));
+        Invoke("ResetBall", 2f);
     }
     
     private void StopBall()
