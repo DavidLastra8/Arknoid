@@ -5,7 +5,8 @@ using UnityEngine;
 public class BrickManager : MonoBehaviour
 {
     [SerializeField] int brickHP;
-    
+    private int Lvl1Brick = 35;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
@@ -13,6 +14,7 @@ public class BrickManager : MonoBehaviour
             brickHP--;
             if (brickHP == 0)
             {
+                Lvl1Brick--;
                 Destroy(gameObject);
             }
             

@@ -10,7 +10,7 @@ public class BallManager : MonoBehaviour
     [SerializeField] private PlayerMovement player;
     private Vector2 velocity;
     private Vector2 startPosition;
-    private SceneManager sceneManager;
+    [SerializeField] private GameManager gameManager;
     bool IsAutomatic = false;
 
     // Start is called before the first frame update
@@ -27,9 +27,9 @@ public class BallManager : MonoBehaviour
         {
             player.playerHP--;
 
-            if (player.playerHP == 0)
+            if (player.playerHP <= 0)
             {
-                //sceneManager.GameOver();
+                gameManager.GameOver();
                 StopBall();
                 
             }
