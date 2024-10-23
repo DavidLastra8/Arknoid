@@ -26,7 +26,22 @@ public class UIManager: MonoBehaviour
 
     public void ResetGame()
     {
+        SceneManager.LoadScene("InitialScreen");
+    }
+
+    public void LoadLvl1()
+    {
         SceneManager.LoadScene("Lvl1");
+    }
+
+    public void LoadLvl2()
+    {
+        SceneManager.LoadScene("Lvl2");
+    }
+
+    public void LoadData()
+    {
+
     }
     
 }

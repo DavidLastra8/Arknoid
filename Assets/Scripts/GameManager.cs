@@ -8,13 +8,22 @@ public class GameManager : MonoBehaviour
     PlayerMovement player;
     public bool isPausing = false;
     [SerializeField] private UIManager uiManager;
+    public static GameManager instance;
+
+    private void Start()
+    {
+        instance = this;
+    }
     public void GameOver()
     {
         
-            SceneManager.LoadScene("GameOverScene");
+        SceneManager.LoadScene("GameOverScene");
         
     }
-
+    public void LoadLvl2()
+    {
+        SceneManager.LoadScene("Lvl2");
+    }
     public void PauseMenuActivation()
     {
         uiManager.PauseMenu();

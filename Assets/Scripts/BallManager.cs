@@ -12,7 +12,7 @@ public class BallManager : MonoBehaviour
     private Vector2 velocity;
     private Vector2 startPosition;
     [SerializeField] private GameManager gameManager;
-    bool IsAutomatic = false;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +41,10 @@ public class BallManager : MonoBehaviour
                 ResetPosition();
             }
 
+        }
+        if (rigidbody.velocity.magnitude <= 13)
+        {
+            rigidbody.velocity = rigidbody.velocity * 1.08f;
         }
 
     }
