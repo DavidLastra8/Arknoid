@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6522200292256839632}
   - component: {fileID: 3422237100398321425}
   - component: {fileID: 8809697339891417463}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: Brick3HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,4 +145,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickHP: 3
   brickScore: 0
-  powerUp: {fileID: 3459531391520208623, guid: 34089af7eedc2e54f8ac1a05105e0ba4, type: 3}
+  playerMovement: {fileID: 7661611155012984493, guid: ac999388e62c6244a82882108878750c, type: 3}
+  powerUp: {fileID: 4577026829878085048, guid: 7a8a9054908acdc4ca5140ccf74df20a, type: 3}

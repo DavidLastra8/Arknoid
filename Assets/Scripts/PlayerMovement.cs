@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 offset;
     private bool IsDragging = false;
     private bool IsAutomatic = false;
+    public int playerDamage =1;
     private Camera mainCamera;
     [SerializeField] private GameObject ball;
     public int playerHP = 3;

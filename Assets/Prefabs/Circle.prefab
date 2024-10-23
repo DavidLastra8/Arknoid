@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 537804337504572826}
   - component: {fileID: 1839844585004318394}
   - component: {fileID: 4723921767461847935}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Circle
   m_TagString: Ball
   m_Icon: {fileID: 0}
@@ -162,4 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 537804337504572826}
+  initialSpeed: 300
   speed: 400
+  player: {fileID: 0}
+  gameManager: {fileID: 0}
