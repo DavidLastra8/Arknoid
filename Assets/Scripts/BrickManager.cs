@@ -8,7 +8,7 @@ public class BrickManager : MonoBehaviour
     [SerializeField] int brickScore;
     [SerializeField] private PlayerMovement playerMovement = new PlayerMovement();
     [SerializeField] GameObject powerUp;
-    private int Lvl1Brick = 35;
+    private static int Lvl1Brick = 35;
     private static int powerUpCount = 0; 
     private const int maxPowerUps = 2; 
 
