@@ -6,6 +6,7 @@ using UnityEngine;
 public class BallManager : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rigidbody;
+    [SerializeField] int initialSpeed = 300;
     [SerializeField] int speed;
     [SerializeField] private PlayerMovement player;
     private Vector2 velocity;
@@ -19,6 +20,7 @@ public class BallManager : MonoBehaviour
        
         startPosition = transform.position;
         Invoke("ResetBall",2f);
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -53,12 +55,16 @@ public class BallManager : MonoBehaviour
     {
         velocity.x = Random.Range(-1f, 1f);
         velocity.y = 1f;
+        speed = initialSpeed;
         rigidbody.AddForce(velocity * speed);
     }
    
     private void BallResetPosition()
     {
+        rigidbody.velocity = Vector2.zero;
         transform.position = startPosition;
+        //rigidbody.Sleep();
+
         Invoke("ResetBall", 2f);
     }
     
