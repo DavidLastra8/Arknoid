@@ -144,3 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brickHP: 2
+  brickScore: 0
+  powerUp: {fileID: 3459531391520208623, guid: 34089af7eedc2e54f8ac1a05105e0ba4, type: 3}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6202293490941840977}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a1474db2b5cded4cb1438138284ea5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ball: {fileID: 0}
+  playerHP: 3
 --- !u!61 &6202293490941840977
 BoxCollider2D:
   m_ObjectHideFlags: 0
