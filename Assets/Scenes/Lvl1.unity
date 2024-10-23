@@ -3875,6 +3875,10 @@ PrefabInstance:
       propertyPath: ball
       value: 
       objectReference: {fileID: 1739053658}
+    - target: {fileID: 7661611155012984493, guid: ac999388e62c6244a82882108878750c, type: 3}
+      propertyPath: playerDamage
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8074120945340393533, guid: ac999388e62c6244a82882108878750c, type: 3}
       propertyPath: m_Name
       value: Square
