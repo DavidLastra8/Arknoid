@@ -6,18 +6,30 @@ public class BrickManager : MonoBehaviour
 {
     [SerializeField] int brickHP;
     [SerializeField] int brickScore;
-    [SerializeField] private PlayerMovement playerMovement;
+    public PlayerMovement playerMovement;
     [SerializeField] GameObject powerUp;
     public static int Lvl1Brick = 35;
+    private int GameScore = 0;
     private static int powerUpCount = 0; 
     private const int maxPowerUps = 2;
+    private UIManager uiManager; 
+    private void Start()
+    {
+        uiManager = FindObjectOfType<UIManager>(); 
+    }
 
-   
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
             brickHP-=playerMovement.playerDamage;
+            GameScore += brickScore;
+
+            if (uiManager != null)
+            {
+                uiManager.UpdateScore(GameScore); 
+            }
+
             if (brickHP <= 0)
             {
                 Lvl1Brick--;
@@ -40,4 +52,5 @@ public class BrickManager : MonoBehaviour
         }
     }
 
+    
 }

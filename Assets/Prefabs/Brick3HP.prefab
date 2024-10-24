@@ -144,6 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brickHP: 3
-  brickScore: 0
+  brickScore: 30
   playerMovement: {fileID: 7661611155012984493, guid: ac999388e62c6244a82882108878750c, type: 3}
   powerUp: {fileID: 4577026829878085048, guid: 7a8a9054908acdc4ca5140ccf74df20a, type: 3}
