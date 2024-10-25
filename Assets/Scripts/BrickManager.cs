@@ -8,7 +8,7 @@ public class BrickManager : MonoBehaviour
     [SerializeField] int brickScore;
     public PlayerMovement playerMovement;
     [SerializeField] GameObject powerUp;
-    public static int Lvl1Brick = 35;
+    public static int Lvl1Brick = 30;
     private int GameScore = 0;
     private static int powerUpCount = 0; 
     private const int maxPowerUps = 2;
@@ -46,7 +46,7 @@ public class BrickManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Lvl1Brick == 1)
+        if (Lvl1Brick == 0)
         {
             GameManager.instance.LoadLvl2();
         }
