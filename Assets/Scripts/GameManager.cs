@@ -24,6 +24,20 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Lvl2");
     }
+    public void LoadLvl1() 
+    {
+        SceneManager.LoadScene("Lvl1");
+    }
+
+    public void LoadTransitionLvl1()
+    {
+        SceneManager.LoadScene("TransitionLvl1");
+    }
+
+    public void LoadTransitionLvl2()
+    {
+        SceneManager.LoadScene("TransitionLvl2");
+    }
     public void PauseMenuActivation()
     {
         uiManager.PauseMenu();
