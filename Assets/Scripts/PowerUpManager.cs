@@ -22,7 +22,7 @@ public class PowerUpManager : MonoBehaviour
         {
             if (playerMovement != null)
             {
-                playerMovement.playerDamage += 1;
+                playerMovement.playerHP += 1;
             }
             Destroy(gameObject);
         }
