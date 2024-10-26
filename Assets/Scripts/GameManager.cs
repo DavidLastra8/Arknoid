@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("TransitionLvl2");
     }
+
+    public void LoadBackToMenu()
+    {
+        SceneManager.LoadScene("InitialScreen");
+    }
     public void PauseMenuActivation()
     {
         uiManager.PauseMenu();

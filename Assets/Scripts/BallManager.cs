@@ -27,6 +27,7 @@ public class BallManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DeathCollider"))
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.deathSound);
             player.playerHP--;
 
             if (player.playerHP <= 0)
@@ -41,6 +42,10 @@ public class BallManager : MonoBehaviour
                 ResetPosition();
             }
 
+        }
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            SoundManager.instance.PlaySound(SoundManager.instance.crashSound);
         }
         if (rigidbody.velocity.magnitude <= 13)
         {

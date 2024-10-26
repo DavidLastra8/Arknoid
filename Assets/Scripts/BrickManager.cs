@@ -13,7 +13,7 @@ public class BrickManager : MonoBehaviour
     private int GameScore = 0;
     private static int powerUpCount = 0; 
     private const int maxPowerUps = 2;
-    private UIManager uiManager; 
+    private UIManager uiManager;
     private void Start()
     {
         uiManager = FindObjectOfType<UIManager>(); 
@@ -23,7 +23,8 @@ public class BrickManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
-            brickHP-=playerMovement.playerDamage;
+            SoundManager.instance.PlaySound(SoundManager.instance.crashSound);
+            brickHP -=playerMovement.playerDamage;
             GameScore += brickScore;
 
             if (uiManager != null)
@@ -47,6 +48,7 @@ public class BrickManager : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Ball2"))
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.crashSound);
             brickHP -= playerMovement.playerDamage;
             GameScore += brickScore;
 
@@ -71,12 +73,12 @@ public class BrickManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Lvl1Brick == 1)
+        if (Lvl1Brick == 0)
         {
-            GameManager.instance.LoadLvl2();
+            GameManager.instance.LoadTransitionLvl2();
         }
 
-        if (Lvl2Brick == 1)
+        if (Lvl2Brick == 0)
         {
             GameManager.instance.LoadLvl1();
         }

@@ -20,6 +20,7 @@ public class PowerUpManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.powerUpSound);
             if (playerMovement != null)
             {
                 playerMovement.playerHP += 1;
