@@ -67,7 +67,6 @@ public class BallManager : MonoBehaviour
     {
         rigidbody.velocity = Vector2.zero;
         transform.position = startPosition;
-        //rigidbody.Sleep();
 
         Invoke("ResetBall", 2f);
     }
