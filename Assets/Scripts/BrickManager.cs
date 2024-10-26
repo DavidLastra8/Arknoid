@@ -76,11 +76,13 @@ public class BrickManager : MonoBehaviour
         if (Lvl1Brick == 0)
         {
             GameManager.instance.LoadTransitionLvl2();
+            GameManager.instance.SaveData();
         }
 
         if (Lvl2Brick == 0)
         {
             GameManager.instance.LoadLvl1();
+            GameManager.instance.SaveData();
         }
     }
 

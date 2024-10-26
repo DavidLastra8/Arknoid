@@ -18,8 +18,9 @@ public class UIManager: MonoBehaviour
     [SerializeField ]private PlayerMovement playerMovement;
 
 
-    private int currentScore;
-    private int currentLives;
+    public int currentScore;
+    public int currentLives;
+    public int highScore;
 
     private void Start()
     {
@@ -66,7 +67,7 @@ public class UIManager: MonoBehaviour
     {
         currentScore = PlayerPrefs.GetInt("Score", 0);
         currentLives = PlayerPrefs.GetInt("Lives", 3);
-        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
 
         scoreText.text = "Score: " + currentScore;
         livesText.text = "Lives: " + currentLives;
@@ -78,9 +79,8 @@ public class UIManager: MonoBehaviour
 
         scoreText.text = "Score: " + currentScore;
         livesText.text = "Lives: " + playerMovement.playerHP;
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
 
-
-        int highScore = PlayerPrefs.GetInt("HighScore", 0);
         if (currentScore > highScore)
         {
             highScoreText.text = "Best: " + currentScore;
