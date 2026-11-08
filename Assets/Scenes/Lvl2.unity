@@ -3605,8 +3605,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1846258916}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ResetGame
+        m_TargetAssemblyTypeName: Arknoid.Unity.Views.ScreenView, Arknoid.Unity
+        m_MethodName: OnMainMenuClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3834,9 +3834,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 651676701}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: LoadBackToMenu
+      - m_Target: {fileID: 1846258916}
+        m_TargetAssemblyTypeName: Arknoid.Unity.Views.ScreenView, Arknoid.Unity
+        m_MethodName: OnMainMenuClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4559,8 +4559,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1846258916}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: Continue
+        m_TargetAssemblyTypeName: Arknoid.Unity.Views.ScreenView, Arknoid.Unity
+        m_MethodName: OnResumeClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
