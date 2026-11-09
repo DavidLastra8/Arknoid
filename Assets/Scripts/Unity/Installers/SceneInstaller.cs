@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Arknoid.Core.Config;
 using Arknoid.Core.Models;
 using Arknoid.Core.Presenters;
@@ -14,7 +15,7 @@ namespace Arknoid.Unity.Installers
     /// y los conecta con las vistas (inyección por constructor). Sustituye al antiguo GameManager:
     /// está en el mismo GameObject "GameManager" de cada escena, así que no hay que añadir nada.
     ///
-    /// - Escenas con ladrillos → monta la partida completa.
+    /// - Escenas con ladrillos → monta la partida completa (y restaura el nivel guardado si lo hay).
     /// - Resto (menú, transiciones, game over) → solo UI y navegación.
     /// </summary>
     [DefaultExecutionOrder(-100)]
@@ -42,11 +43,12 @@ namespace Arknoid.Unity.Installers
         [SerializeField] private GameRules rules = new GameRules();
 
         private readonly PresenterGroup presenters = new PresenterGroup();
+        private RunAutoSaver autoSaver;
 
         private void Start()
         {
             var scenes = new UnitySceneLoader();
-            var save = new PlayerPrefsSaveService();
+            var save = new BinaryFileSaveService(BinaryFileSaveService.DefaultPath);
             var input = new KeyboardInputService();
             var audio = ResolveAudio();
             var levels = LevelSequence.Default();
@@ -70,12 +72,13 @@ namespace Arknoid.Unity.Installers
 
             if (isGameplay)
             {
-                ComposeGameplay(bricks, score, lives, audio, input, scenes, save, levels, sceneName);
+                ComposeGameplay(bricks, run.Level, score, lives, audio, input, scenes, save, levels, sceneName);
             }
         }
 
         private void ComposeGameplay(
             BrickView[] bricks,
+            LevelSnapshot savedLevel,
             ScoreModel score,
             LivesModel lives,
             IAudioService audio,
@@ -94,6 +97,17 @@ namespace Arknoid.Unity.Installers
                 return;
             }
 
+            // Firma del diseño del nivel: si no coincide con la guardada, el nivel empieza de cero.
+            var brickIds = new List<string>(bricks.Length);
+            foreach (var brick in bricks) brickIds.Add(brick.Id);
+            uint layoutSignature = LevelSnapshot.ComputeLayoutSignature(brickIds);
+
+            if (savedLevel != null && !savedLevel.IsUsableFor(layoutSignature))
+            {
+                Debug.LogWarning($"[SceneInstaller] El nivel guardado de '{sceneName}' no coincide con la escena actual; se empieza desde cero.");
+                savedLevel = null;
+            }
+
             var random = new UnityRandom();
             var level = new LevelModel();
 
@@ -105,14 +119,24 @@ namespace Arknoid.Unity.Installers
                 presenters.Add(new PausePresenter(new PauseModel(), screenView, input, new UnityTimeControl()));
             }
 
-            var drops = new PowerUpDropPolicy(rules.powerUpDropChance, rules.maxPowerUpsPerLevel, random);
+            var drops = new PowerUpDropPolicy(
+                rules.powerUpDropChance, rules.maxPowerUpsPerLevel, random, savedLevel?.PowerUpsDropped ?? 0);
             var powerUpEffect = new ExtraLifeEffect(lives, rules.powerUpExtraLives);
 
             foreach (var brick in bricks)
             {
+                int hitPoints = brick.HitPoints;
+
+                // Al continuar un nivel a medias: los ladrillos que no están en el guardado ya estaban rotos.
+                if (savedLevel != null && !savedLevel.TryGetHitPoints(brick.Id, out hitPoints))
+                {
+                    brick.Break();
+                    continue;
+                }
+
                 presenters.Add(new BrickPresenter(
                     brick,
-                    new BrickModel(brick.HitPoints, brick.ScoreValue),
+                    new BrickModel(hitPoints, brick.ScoreValue),
                     score,
                     level,
                     drops,
@@ -123,6 +147,9 @@ namespace Arknoid.Unity.Installers
 
             var flow = presenters.Add(new GameFlowPresenter(
                 lives, score, level, ballPresenter, paddlePresenter, audio, scenes, runs, levels, sceneName));
+
+            autoSaver = presenters.Add(new RunAutoSaver(
+                runs, sceneName, layoutSignature, score, lives, level, drops, screenView));
 
             flow.StartRound();
         }
@@ -160,6 +187,14 @@ namespace Arknoid.Unity.Installers
         private void Update()
         {
             presenters.Tick(Time.deltaTime);
+        }
+
+        // Guarda el nivel a medias si se cierra el juego (o la app pasa a segundo plano en móvil).
+        private void OnApplicationQuit() => autoSaver?.SaveNow();
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) autoSaver?.SaveNow();
         }
 
         private void OnDestroy()

@@ -1,3 +1,4 @@
+using System;
 using Arknoid.Core.Services;
 
 namespace Arknoid.Core.Models
@@ -9,11 +10,13 @@ namespace Arknoid.Core.Models
         private readonly int maxDrops;
         private readonly IRandom random;
 
-        public PowerUpDropPolicy(float chance, int maxDrops, IRandom random)
+        /// <param name="dropsSoFar">Power-ups ya soltados en este nivel (al restaurar una partida guardada).</param>
+        public PowerUpDropPolicy(float chance, int maxDrops, IRandom random, int dropsSoFar = 0)
         {
             this.chance = chance;
             this.maxDrops = maxDrops;
             this.random = random;
+            DropsSoFar = Math.Max(0, dropsSoFar);
         }
 
         public int DropsSoFar { get; private set; }

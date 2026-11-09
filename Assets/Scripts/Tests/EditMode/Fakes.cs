@@ -116,6 +116,7 @@ namespace Arknoid.Core.Tests
     internal class FakeBrickView : IBrickView
     {
         public event Action HitByBall;
+        public string Id { get; set; } = "brick";
         public int HitPoints { get; set; } = 1;
         public int ScoreValue { get; set; } = 10;
         public bool Broken;

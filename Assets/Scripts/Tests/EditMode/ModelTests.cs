@@ -49,8 +49,8 @@ namespace Arknoid.Core.Tests
             var level = new LevelModel();
             int cleared = 0;
             level.Cleared += () => cleared++;
-            level.RegisterBrick();
-            level.RegisterBrick();
+            level.Register("a", new BrickModel(1, 10));
+            level.Register("b", new BrickModel(1, 10));
 
             level.NotifyBrickDestroyed();
             Assert.AreEqual(0, cleared);

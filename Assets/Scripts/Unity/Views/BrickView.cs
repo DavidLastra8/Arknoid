@@ -20,7 +20,14 @@ namespace Arknoid.Unity.Views
         [FormerlySerializedAs("powerUp")]
         [SerializeField] private GameObject powerUpPrefab;
 
+        [Tooltip("Opcional. Si se deja vacío, el ID se genera a partir de la posición en la jerarquía.")]
+        [SerializeField] private string persistentId;
+
+        private string cachedId;
+
         public event Action HitByBall;
+
+        public string Id => cachedId ?? (cachedId = string.IsNullOrEmpty(persistentId) ? BuildHierarchyId(transform) : persistentId);
 
         public int HitPoints => hitPoints;
         public int ScoreValue => scoreValue;
@@ -36,6 +43,22 @@ namespace Arknoid.Unity.Views
 
             var instance = Instantiate(powerUpPrefab, transform.position, transform.rotation);
             return instance.GetComponent<PowerUpView>();
+        }
+
+        /// <summary>
+        /// Ruta de índices de hermano desde la raíz, p. ej. "6/1/14". Es estable mientras no reordenes
+        /// la jerarquía; si lo haces, cambia la firma del nivel y el guardado del nivel se ignora sin romper nada.
+        /// </summary>
+        private static string BuildHierarchyId(Transform node)
+        {
+            var path = new System.Text.StringBuilder();
+            for (var current = node; current != null; current = current.parent)
+            {
+                path.Insert(0, current.GetSiblingIndex());
+                if (current.parent != null) path.Insert(0, '/');
+            }
+
+            return path.ToString();
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

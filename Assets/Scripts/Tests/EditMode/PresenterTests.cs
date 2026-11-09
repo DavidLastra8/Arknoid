@@ -149,7 +149,7 @@ namespace Arknoid.Core.Tests
         public void GameFlow_ClearingLevelSavesRunAndLoadsTransition()
         {
             var level = new LevelModel();
-            level.RegisterBrick();
+            level.Register("only", new BrickModel(1, 10));
             var scenes = new FakeSceneLoader();
             var runs = new FakeRunRepository();
             var score = new ScoreModel(0, 0);

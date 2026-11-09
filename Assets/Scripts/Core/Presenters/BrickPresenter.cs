@@ -36,7 +36,7 @@ namespace Arknoid.Core.Presenters
             this.damage = damage;
             this.onPowerUpSpawned = onPowerUpSpawned;
 
-            level.RegisterBrick();
+            level.Register(view.Id, brick);
             view.HitByBall += OnHitByBall;
         }
 

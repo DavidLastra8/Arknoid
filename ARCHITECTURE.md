@@ -7,18 +7,19 @@ Assets/Scripts/
 ├── Core/                      Arknoid.Core.asmdef  (noEngineReferences: C# puro, sin UnityEngine)
 │   ├── Config/                GameRules, SceneNames, LevelSequence
 │   ├── Models/                ScoreModel, LivesModel, BrickModel, LevelModel, PauseModel,
-│   │                          RunData, PowerUpDropPolicy, ExtraLifeEffect
+│   │                          RunData, LevelSnapshot, BrickState, PowerUpDropPolicy, ExtraLifeEffect
+│   ├── Persistence/           SaveData, SaveDataBinarySerializer (formato binario, sin E/S de disco)
 │   ├── Views/                 Interfaces de vista: IBallView, IPaddleView, IBrickView, IPowerUpView,
 │   │                          IScoreView, ILivesView, IPauseView, INavigationView, ITrackable
 │   ├── Services/              Interfaces de servicios: IAudioService, IInputService, ISceneLoader,
 │   │                          IRunRepository, IHighScoreRepository, IRandom, ITimeControl, ITickable…
 │   └── Presenters/            BallPresenter, PaddlePresenter, BrickPresenter, PowerUpPresenter,
 │                              ScorePresenter, LivesPresenter, PausePresenter, NavigationPresenter,
-│                              GameFlowPresenter, PresenterGroup
+│                              GameFlowPresenter, RunAutoSaver, PresenterGroup
 ├── Unity/                     Arknoid.Unity.asmdef (depende de Core)
 │   ├── Views/                 MonoBehaviours pasivos: BallView, PaddleView, BrickView, PowerUpView, ScreenView
 │   ├── Services/              AudioService, KeyboardInputService, UnitySceneLoader,
-│   │                          PlayerPrefsSaveService, UnityRandom, UnityTimeControl
+│   │                          BinaryFileSaveService, UnityRandom, UnityTimeControl
 │   └── Installers/            SceneInstaller (composition root de cada escena)
 └── Tests/EditMode/            Arknoid.Core.Tests.asmdef: tests de modelos y presenters con fakes
 ```
@@ -93,6 +94,30 @@ Los `OnClick()` de los botones se han reapuntado a `ScreenView`:
 navegación. Los valores de juego (vidas, fuerza de saque, aceleración, probabilidad de power-up…) están en
 `SceneInstaller → Rules`, en el Inspector.
 
+## Sistema de guardado (binario)
+
+Se guarda en `Application.persistentDataPath/arknoid.sav`. En Windows es
+`%USERPROFILE%\AppData\LocalLow\<Company>\<Product>\arknoid.sav`.
+
+- **Qué se guarda:** el récord y la partida en curso (escena, puntos y vidas). Si el nivel está a medias,
+  también los **ladrillos que quedan con su vida restante** y los power-ups ya soltados en ese nivel.
+- **Formato:** `SaveDataBinarySerializer` (en Core, testeado) escribe con `BinaryWriter`. Empieza con un
+  número mágico `ARKN` y una versión, para poder detectar archivos que no son de guardado y migrar formatos
+  en el futuro. No se usa `BinaryFormatter` porque está obsoleto y es inseguro.
+- **Disco:** `BinaryFileSaveService` escribe primero en un `.tmp` y después lo sustituye, así que si el juego se
+  cierra a mitad de una escritura, el guardado anterior queda intacto. Si el archivo está corrupto, se aparta
+  como `.corrupt` y se empieza de cero. La primera vez importa el récord antiguo de PlayerPrefs.
+- **Cuándo se guarda el nivel a medias** (`RunAutoSaver`): al romperse un ladrillo, al cambiar las vidas,
+  al pulsar *Exit* en la pausa y al cerrar el juego.
+- **Cómo se identifica cada ladrillo:** por su ruta de índices en la jerarquía (p. ej. `6/1/14`), o por
+  `BrickView → Persistent Id` si lo rellenas a mano. Con todos los IDs se calcula una **firma del nivel**.
+  Si cambias los ladrillos en el editor, la firma ya no coincide y el nivel guardado se descarta, en lugar
+  de restaurar ladrillos equivocados.
+- **Al cargar:** `SceneInstaller` destruye los ladrillos que no aparecen en el guardado y da a los demás
+  la vida que tenían.
+
+Para borrar el guardado mientras desarrollas, elimina `arknoid.sav` de esa carpeta.
+
 ## Bugs corregidos
 
 1. **El nivel 2 no se podía jugar.** `Lvl1Brick`/`Lvl2Brick` eran `static` y no se reiniciaban. Al llegar a Lvl2,
@@ -119,5 +144,5 @@ navegación. Los valores de juego (vidas, fuerza de saque, aceleración, probabi
 
 ## Tests
 
-`Window → General → Test Runner → EditMode → Run All`. Hay 16 tests de modelos y presenters, y se ejecutan
-sin escenas porque usan los fakes de `Tests/EditMode/Fakes.cs`.
+`Window → General → Test Runner → EditMode → Run All`. Hay 22 tests de modelos, presenters y del formato de
+guardado, y se ejecutan sin escenas porque usan los fakes de `Tests/EditMode/Fakes.cs`.
