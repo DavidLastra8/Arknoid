@@ -102,7 +102,14 @@ namespace Arknoid.Core.Tests
         }
 
         public void MultiplyVelocity(float factor) => VelocityFactor *= factor;
-        public void ResetToStart() => ResetCount++;
+        public void ResetToStart()
+        {
+            // Igual que BallView: vuelve a la posición de salida.
+            ResetCount++;
+            PositionX = StartPosition.X;
+            PositionY = StartPosition.Y;
+        }
+
         public void BounceUp() => BounceUpCount++;
         public void SetActive(bool active) => Active = active;
         public void Remove() => Removed = true;

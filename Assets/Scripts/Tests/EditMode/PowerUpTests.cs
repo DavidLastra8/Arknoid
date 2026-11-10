@@ -67,10 +67,12 @@ namespace Arknoid.Core.Tests
         [Test]
         public void Balls_SpawnOriginStartOrExistingBall()
         {
-            var main = new FakeBallView { StartPosition = new WorldPoint(0f, -4f, 0f), PositionX = 3f, PositionY = 1f };
+            var main = new FakeBallView { StartPosition = new WorldPoint(0f, -4f, 0f) };
             var factory = new FakeBallFactory();
             var balls = new BallsPresenter(main, factory, rules, random, audio);
             ServeAndLaunch(balls);
+            main.PositionX = 3f; // la bola se ha movido tras el saque
+            main.PositionY = 1f;
 
             balls.SpawnBalls(1, BallSpawnOrigin.BallStart);
             Assert.AreEqual(-4f, factory.Positions[0].Y);
@@ -98,10 +100,12 @@ namespace Arknoid.Core.Tests
         [Test]
         public void Balls_PaddleFollowsLowestBall()
         {
-            var main = new FakeBallView { PositionX = 0f, PositionY = 2f };
+            var main = new FakeBallView();
             var factory = new FakeBallFactory();
             var balls = new BallsPresenter(main, factory, rules, random, audio);
             ServeAndLaunch(balls);
+            main.PositionX = 0f;
+            main.PositionY = 2f;
             balls.SpawnBalls(1, BallSpawnOrigin.BallStart);
             factory.Created[0].PositionX = -2f;
             factory.Created[0].PositionY = -1f;

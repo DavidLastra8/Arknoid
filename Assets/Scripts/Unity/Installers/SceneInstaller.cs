@@ -156,7 +156,7 @@ namespace Arknoid.Unity.Installers
                 lives, score, level, balls, paddlePresenter, audio, scenes, runs, levels, sceneName));
 
             autoSaver = presenters.Add(new RunAutoSaver(
-                runs, sceneName, layoutSignature, score, lives, level, drops, screenView));
+                runs, sceneName, layoutSignature, score, lives, level, drops, screenView, flow));
 
             flow.StartRound();
         }

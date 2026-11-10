@@ -183,5 +183,16 @@ Para borrar el guardado mientras desarrollas, elimina `arknoid.sav` de esa carpe
 
 ## Tests
 
-`Window → General → Test Runner → EditMode → Run All`. Hay 32 tests de modelos, presenters, power-ups y del formato de
-guardado, y se ejecutan sin escenas porque usan los fakes de `Tests/EditMode/Fakes.cs`.
+Abre `Window → General → Test Runner`. Hay tres grupos:
+
+| Pestaña | Assembly | Qué prueba |
+|---|---|---|
+| **EditMode** | `Arknoid.Core.Tests` (48) | Modelos y presenters con fakes, sin escenas. `GameplayScenarioTests` conecta los presenters reales como en `SceneInstaller` y prueba combinaciones: 5 power-ups en el mismo frame, multibolas hasta el límite, bolas que caen a la vez, power-ups recogidos justo tras un game over o un nivel superado, valores negativos en el catálogo… |
+| **EditMode** | `Arknoid.Unity.EditorTests` (6) | Assets: el catálogo tiene un prefab por tipo, todos con la misma forma pero distinto color, las bolas no chocan con los power-ups (matriz de capas) y Lvl1/Lvl2 tienen el catálogo asignado. |
+| **PlayMode** | `Arknoid.PlayMode.Tests` (11) | **Física real** en un mini-nivel creado por código con los prefabs reales. Comprueba que las bolas no se quedan pegadas al `DeathCollider`, que las extra se destruyen al caer, que la barrera para la bola incluso al doble de la velocidad máxima, que los power-ups la atraviesan y no se quedan atrapados, y que se pueden recoger 5 a la vez. Además hay un *smoke test* que carga Lvl1 y Lvl2 (con un guardado temporal, para no pisar el tuyo). |
+
+Errores que encontraron estos tests y ya están corregidos:
+- Un multibola recogido en el mismo frame en que acaba la partida creaba bolas después del `Stop()`.
+- Un +vida recogido justo después del game over volvía a guardar la partida, y *Load* la "resucitaba".
+- Un power-up que no tocaba ni la pala ni el `DeathCollider` no se destruía nunca. Ahora tiene `Max Lifetime`
+  (10 s por defecto).

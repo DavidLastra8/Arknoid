@@ -17,6 +17,12 @@ namespace Arknoid.Unity.Views
         [SerializeField] private float fallSpeed = 6f;
         [SerializeField] private string missZoneTag = "DeathCollider";
 
+        [Tooltip("Segundos máximos en pantalla. Si no ha tocado ni la pala ni el DeathCollider (p. ej. cae fuera de él), se pierde.")]
+        [SerializeField] private float maxLifetime = 10f;
+
+        private float age;
+        private bool finished;
+
         public event Action Collected;
         public event Action Missed;
 
@@ -25,6 +31,9 @@ namespace Arknoid.Unity.Views
         private void Update()
         {
             transform.position += Vector3.down * (fallSpeed * Time.deltaTime);
+
+            age += Time.deltaTime;
+            if (age >= maxLifetime) RaiseMissed();
         }
 
         public void Remove()
@@ -36,14 +45,27 @@ namespace Arknoid.Unity.Views
         {
             var other = collision.gameObject;
 
+            if (finished) return;
+
             if (other.TryGetComponent<PaddleView>(out _))
             {
+                finished = true;
                 Collected?.Invoke();
             }
             else if (other.CompareTag(missZoneTag))
             {
-                Missed?.Invoke();
+                RaiseMissed();
             }
+        }
+
+        private void RaiseMissed()
+        {
+            if (finished) return;
+            finished = true;
+
+            // Sin presenter (p. ej. instanciado a mano) se destruye solo, para no quedarse para siempre.
+            if (Missed == null) Destroy(gameObject);
+            else Missed.Invoke();
         }
     }
 }

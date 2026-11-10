@@ -25,6 +25,10 @@ namespace Arknoid.Core.Presenters
         private readonly List<BallPresenter> extras = new List<BallPresenter>();
         private float launchCountdown = -1f;
 
+        // false antes del primer saque y después de Stop() (game over / nivel superado):
+        // un multibola recogido en ese mismo frame no debe crear bolas.
+        private bool roundActive;
+
         public BallsPresenter(IBallView mainBall, IBallFactory factory, GameRules rules, IRandom random, IAudioService audio)
         {
             this.factory = factory;
@@ -65,10 +69,12 @@ namespace Arknoid.Core.Presenters
             inPlay.Clear();
             inPlay.Add(main);
             launchCountdown = rules.relaunchDelay;
+            roundActive = true;
         }
 
         public void Stop()
         {
+            roundActive = false;
             launchCountdown = -1f;
             RemoveExtras();
             inPlay.Clear();
@@ -89,6 +95,8 @@ namespace Arknoid.Core.Presenters
 
         public void SpawnBalls(int count, BallSpawnOrigin origin)
         {
+            if (!roundActive) return;
+
             int allowed = Math.Min(count, rules.maxBallsInPlay - inPlay.Count);
 
             for (int i = 0; i < allowed; i++)

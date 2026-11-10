@@ -25,7 +25,10 @@ namespace Arknoid.Unity.Services
             this.filePath = filePath;
         }
 
-        public static string DefaultPath => Path.Combine(Application.persistentDataPath, FileName);
+        /// <summary>Solo para tests: redirige el guardado a otra ruta para no pisar la partida real.</summary>
+        public static string PathOverride { get; set; }
+
+        public static string DefaultPath => PathOverride ?? Path.Combine(Application.persistentDataPath, FileName);
 
         private SaveData Data => data ?? (data = LoadFromDisk());
 

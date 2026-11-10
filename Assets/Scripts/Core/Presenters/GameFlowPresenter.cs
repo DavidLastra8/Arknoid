@@ -9,7 +9,7 @@ namespace Arknoid.Core.Presenters
     /// Flujo de una partida en un nivel: perder vidas, game over y paso al siguiente nivel.
     /// Es la lógica que antes estaba repartida entre BallManager, BrickManager y GameManager.
     /// </summary>
-    public class GameFlowPresenter : IDisposable
+    public class GameFlowPresenter : IGameFlowState, IDisposable
     {
         private readonly LivesModel lives;
         private readonly ScoreModel score;

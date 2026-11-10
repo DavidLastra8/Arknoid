@@ -21,6 +21,7 @@ namespace Arknoid.Core.Presenters
         private readonly LevelModel level;
         private readonly PowerUpDropPolicy drops;
         private readonly INavigationView navigation;
+        private readonly IGameFlowState flow;
 
         public RunAutoSaver(
             IRunRepository runs,
@@ -30,8 +31,10 @@ namespace Arknoid.Core.Presenters
             LivesModel lives,
             LevelModel level,
             PowerUpDropPolicy drops,
-            INavigationView navigation = null)
+            INavigationView navigation = null,
+            IGameFlowState flow = null)
         {
+            this.flow = flow;
             this.runs = runs;
             this.sceneName = sceneName;
             this.layoutSignature = layoutSignature;
@@ -48,7 +51,9 @@ namespace Arknoid.Core.Presenters
 
         public void SaveNow()
         {
-            if (level.IsCleared || lives.IsDepleted) return;
+            // Tras el game over o el nivel superado ya no se guarda. Si no, un +vida recogido en el mismo
+            // frame del game over volvía a guardar la partida y "Load" resucitaba una partida perdida.
+            if (level.IsCleared || lives.IsDepleted || (flow != null && flow.IsFinished)) return;
 
             var snapshot = new LevelSnapshot(layoutSignature, drops.DropsSoFar, level.GetRemainingBricks());
             runs.Save(new RunData(sceneName, score.Current, lives.Current, snapshot));
