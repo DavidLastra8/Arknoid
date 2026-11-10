@@ -52,6 +52,64 @@ namespace Arknoid.PlayMode.Tests
         [UnityTest]
         public IEnumerator Level2_StartsCorrectly() => LevelStartsCorrectly("Lvl2");
 
+        [UnityTest]
+        public IEnumerator Level1_OrangePowerUp_CreatesABarrierThatStopsTheBall() => OrangePowerUpWorks("Lvl1");
+
+        [UnityTest]
+        public IEnumerator Level2_OrangePowerUp_CreatesABarrierThatStopsTheBall() => OrangePowerUpWorks("Lvl2");
+
+        /// <summary>
+        /// De principio a fin en el nivel real: genera un power-up naranja encima de la pala (igual que los
+        /// comandos de debug), espera a recogerlo y comprueba que la barrera aparece sobre el DeathCollider
+        /// y que la bola real rebota en ella.
+        /// </summary>
+        private IEnumerator OrangePowerUpWorks(string scene)
+        {
+            loadedScene = scene;
+            SceneManager.LoadScene(scene);
+            yield return new WaitForSeconds(2.5f); // que la bola ya esté lanzada
+
+            var installer = Object.FindObjectOfType<SceneInstaller>();
+            var paddle = Object.FindObjectOfType<PaddleView>();
+            var ball = Object.FindObjectOfType<BallView>();
+            var barrier = Object.FindObjectsOfType<BarrierView>(true)[0];
+            var death = GameObject.FindWithTag("DeathCollider").GetComponent<Collider2D>();
+            Assert.IsNotNull(installer.PowerUps);
+
+            var paddleTop = paddle.GetComponent<Collider2D>().bounds.max.y;
+            var p = paddle.transform.position;
+            installer.PowerUps.Spawn(Arknoid.Core.Models.PowerUps.PowerUpType.Barrier,
+                new Arknoid.Core.Models.WorldPoint(p.x, paddleTop + 0.4f, p.z));
+
+            for (float t = 0f; t < 2f && !barrier.gameObject.activeSelf; t += Time.deltaTime) yield return null;
+            Assert.IsTrue(barrier.gameObject.activeSelf, "Al coger el naranja la barrera debe aparecer");
+
+            yield return new WaitForFixedUpdate();
+            var barrierBounds = barrier.GetComponent<Collider2D>().bounds;
+            var deathBounds = death.bounds;
+            Assert.Greater(barrierBounds.size.x, deathBounds.size.x * 0.9f, "La barrera debe ocupar el ancho del DeathCollider");
+            Assert.GreaterOrEqual(barrierBounds.min.y, deathBounds.max.y - 0.01f, "Debe estar encima del DeathCollider");
+
+            // Lanza la bola hacia abajo, lejos de la pala, entre la barrera y la pala.
+            var body = ball.GetComponent<Rigidbody2D>();
+            float x = Camera.main.ViewportToWorldPoint(new Vector3(0.2f, 0f, 0f)).x;
+            var start = new Vector2(x, barrierBounds.max.y + 0.6f);
+            ball.transform.position = start;
+            body.position = start;
+            body.velocity = new Vector2(0f, -8f);
+
+            bool wentUp = false;
+            for (float t = 0f; t < 1.5f && !wentUp; t += Time.deltaTime)
+            {
+                yield return null;
+                wentUp = body.velocity.y > 0f;
+            }
+
+            Assert.IsTrue(wentUp, "La bola debe rebotar en la barrera");
+            Assert.Greater(ball.transform.position.y, deathBounds.max.y, "La bola no debe haber llegado al DeathCollider");
+            LogAssert.NoUnexpectedReceived();
+        }
+
         private IEnumerator LevelStartsCorrectly(string scene)
         {
             loadedScene = scene;
@@ -65,6 +123,7 @@ namespace Arknoid.PlayMode.Tests
                 typeof(SceneInstaller).GetField("powerUpCatalog", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(installer),
                 "El PowerUpCatalog no está asignado en " + scene);
 
+            Assert.IsNotNull(Object.FindObjectOfType<AudioService>(), "Debe haber sonido aunque se abra el nivel directamente");
             Assert.AreEqual(1, Object.FindObjectsOfType<BallView>().Length, "Debe empezar con una sola bola");
             Assert.Greater(Object.FindObjectsOfType<BrickView>().Length, 0);
 

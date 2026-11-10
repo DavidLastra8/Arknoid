@@ -49,8 +49,14 @@ namespace Arknoid.Unity.Installers
         [Tooltip("Tag del collider inferior. La barrera naranja se coloca justo encima.")]
         [SerializeField] private string deathZoneTag = "DeathCollider";
 
+        [Tooltip("Se instancia si la escena no tiene AudioService (p. ej. al dar Play directamente en Lvl1).")]
+        [SerializeField] private AudioService audioServicePrefab;
+
         private readonly PresenterGroup presenters = new PresenterGroup();
         private RunAutoSaver autoSaver;
+
+        /// <summary>Spawner de power-ups de esta escena (null fuera de los niveles). Lo usan las herramientas de debug.</summary>
+        public PowerUpSpawner PowerUps { get; private set; }
 
         private void Start()
         {
@@ -130,6 +136,7 @@ namespace Arknoid.Unity.Installers
             var drops = new PowerUpDropPolicy(
                 rules.powerUpDropChance, rules.maxPowerUpsPerLevel, random, savedLevel?.PowerUpsDropped ?? 0);
             var powerUps = ComposePowerUps(drops, random, score, lives, balls, audio);
+            PowerUps = powerUps;
 
             foreach (var brick in bricks)
             {
@@ -215,8 +222,10 @@ namespace Arknoid.Unity.Installers
                 return null;
             }
 
+            // Se pasa el collider (no sus bounds): la barrera calcula su tamaño al activarse,
+            // cuando el Canvas ya ha escalado el DeathCollider.
             return BarrierView.Create(
-                collider.bounds,
+                collider,
                 powerUpCatalog != null ? powerUpCatalog.BarrierThickness : 0.3f,
                 powerUpCatalog != null ? powerUpCatalog.BarrierGap : 0.05f,
                 powerUpCatalog != null ? powerUpCatalog.BarrierColor : new Color(1f, 0.55f, 0.1f, 1f));
@@ -243,10 +252,13 @@ namespace Arknoid.Unity.Installers
             return run;
         }
 
-        private static IAudioService ResolveAudio()
+        private IAudioService ResolveAudio()
         {
             var audio = FindObjectOfType<AudioService>();
             if (audio != null) return audio;
+
+            // Al venir del menú ya existe (DontDestroyOnLoad). Si se abre el nivel directamente, se crea desde el prefab.
+            if (audioServicePrefab != null) return Instantiate(audioServicePrefab);
 
             Debug.LogWarning("[SceneInstaller] No hay AudioService en la escena: el juego irá sin sonido.");
             return new NullAudioService();

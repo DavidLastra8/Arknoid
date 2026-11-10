@@ -1352,6 +1352,7 @@ MonoBehaviour:
   isPausing: 0
   uiManager: {fileID: 1846258916}
   powerUpCatalog: {fileID: 11400000, guid: 47ca110d946a4b63848fb4e7abe025d6, type: 2}
+  audioServicePrefab: {fileID: 597120216, guid: b9f78649956e46c8a45593bbb53ea66d, type: 3}
 --- !u!4 &651676702
 Transform:
   m_ObjectHideFlags: 0
@@ -2794,6 +2795,7 @@ MonoBehaviour:
   sfxSource: {fileID: 1135547514}
   deathSound: {fileID: 8300000, guid: fe25924f17a21cb4790fc1479fcb8132, type: 3}
   crashSound: {fileID: 8300000, guid: 828a27aefceba0044b585e3ed087dec3, type: 3}
+  powerUpSound: {fileID: 8300000, guid: fd11a452296caa544a4ea932787a6659, type: 3}
 --- !u!1 &1172887411
 GameObject:
   m_ObjectHideFlags: 0

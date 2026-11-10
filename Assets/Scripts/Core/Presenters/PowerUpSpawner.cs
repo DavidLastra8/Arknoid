@@ -29,8 +29,19 @@ namespace Arknoid.Core.Presenters
         {
             if (!selector.HasAny || !policy.TryDrop()) return;
 
-            var powerUp = factory.Create(selector.Pick(), position);
+            Spawn(selector.Pick(), position);
+        }
+
+        /// <summary>
+        /// Crea un power-up concreto sin tirar el dado ni gastar el cupo del nivel.
+        /// Pasa por el mismo camino que el juego (evento Spawned → presenter + efecto).
+        /// Devuelve null si ese tipo no está en el catálogo.
+        /// </summary>
+        public IPowerUpView Spawn(PowerUpType type, WorldPoint position)
+        {
+            var powerUp = factory.Create(type, position);
             if (powerUp != null) Spawned?.Invoke(powerUp);
+            return powerUp;
         }
     }
 }

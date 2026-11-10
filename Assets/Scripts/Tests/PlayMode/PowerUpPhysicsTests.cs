@@ -80,7 +80,7 @@ namespace Arknoid.PlayMode.Tests
             };
 
             barrier = presenters.Add(new BarrierPresenter(
-                BarrierView.Create(deathCollider.bounds, 0.3f, 0.05f, new Color(1f, 0.55f, 0.1f, 1f))));
+                BarrierView.Create(deathCollider, 0.3f, 0.05f, new Color(1f, 0.55f, 0.1f, 1f))));
 
             effects = new PowerUpEffects()
                 .Register(PowerUpType.ExtraLife, new ExtraLifeEffect(lives, settings))
@@ -177,6 +177,40 @@ namespace Arknoid.PlayMode.Tests
         {
             // Margen de seguridad: la bola nunca llega a esta velocidad en el juego.
             yield return BarrierStopsBallAt(2f * rules.maxSpeedForSpeedUp * rules.speedUpFactor);
+        }
+
+        /// <summary>
+        /// Regresión del bug "el naranja no genera barrera": en los niveles el DeathCollider está dentro
+        /// de un Canvas que empieza con escala 0 y Unity lo escala después. La barrera tiene que medirse
+        /// al activarse, no al crearse.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator Barrier_InsideParentScaledAfterCreation_MatchesDeathColliderWhenActivated()
+        {
+            var parent = new GameObject("CanvasLikeParent");
+            created.Add(parent);
+            var zone = CreateBox("DeathColliderInCanvas", Vector2.zero, new Vector2(20f, 1f));
+            zone.transform.SetParent(parent.transform, false);
+            zone.transform.localPosition = new Vector3(0f, -20f, 0f);
+            zone.gameObject.tag = "DeathCollider";
+
+            parent.transform.localScale = Vector3.zero; // como el Canvas en el archivo de escena
+            var view = BarrierView.Create(zone, 0.3f, 0.05f, Color.white);
+            var presenter = presenters.Add(new BarrierPresenter(view));
+
+            parent.transform.localScale = Vector3.one; // el Canvas se escala en tiempo de ejecución
+            yield return new WaitForFixedUpdate();
+
+            presenter.Activate(5f);
+            yield return null;
+
+            Assert.IsTrue(view.gameObject.activeSelf);
+            Assert.AreEqual(20f, view.transform.localScale.x, 0.01f, "Mismo ancho que el DeathCollider");
+            Assert.AreEqual(-20f + 0.5f + 0.05f + 0.15f, view.transform.position.y, 0.01f, "Justo encima");
+
+            parent.transform.localScale = new Vector3(2f, 1f, 1f); // p. ej. al cambiar el tamaño de la ventana
+            yield return null;
+            Assert.AreEqual(40f, view.transform.localScale.x, 0.01f, "Se reajusta mientras está activa");
         }
 
         [UnityTest]

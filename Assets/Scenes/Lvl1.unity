@@ -1019,6 +1019,7 @@ MonoBehaviour:
   isPausing: 0
   uiManager: {fileID: 1483124131}
   powerUpCatalog: {fileID: 11400000, guid: 47ca110d946a4b63848fb4e7abe025d6, type: 2}
+  audioServicePrefab: {fileID: 597120216, guid: b9f78649956e46c8a45593bbb53ea66d, type: 3}
 --- !u!1 &261612892
 GameObject:
   m_ObjectHideFlags: 0
