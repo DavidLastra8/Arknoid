@@ -22,6 +22,8 @@ namespace Arknoid.Core.Config
 
         public float powerUpDropChance = 0.24f;
         public int maxPowerUpsPerLevel = 2;
-        public int powerUpExtraLives = 1;
+
+        /// <summary>Límite de bolas a la vez, para que los power-ups de multibola no se descontrolen.</summary>
+        public int maxBallsInPlay = 12;
     }
 }

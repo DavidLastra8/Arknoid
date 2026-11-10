@@ -1,4 +1,5 @@
 using System;
+using Arknoid.Core.Models.PowerUps;
 
 namespace Arknoid.Core.Views
 {
@@ -6,6 +7,8 @@ namespace Arknoid.Core.Views
     {
         event Action Collected;
         event Action Missed;
+
+        PowerUpType Type { get; }
 
         void Remove();
     }

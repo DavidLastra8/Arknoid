@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Arknoid.Core.Config;
 using Arknoid.Core.Models;
+using Arknoid.Core.Models.PowerUps;
 using Arknoid.Core.Presenters;
 using Arknoid.Core.Services;
 using Arknoid.Unity.Services;
@@ -41,6 +42,12 @@ namespace Arknoid.Unity.Installers
         [SerializeField] private PaddleView paddle;
 
         [SerializeField] private GameRules rules = new GameRules();
+
+        [Tooltip("Power-ups que pueden salir de los ladrillos y sus valores (Assets/Data/PowerUpCatalog).")]
+        [SerializeField] private PowerUpCatalog powerUpCatalog;
+
+        [Tooltip("Tag del collider inferior. La barrera naranja se coloca justo encima.")]
+        [SerializeField] private string deathZoneTag = "DeathCollider";
 
         private readonly PresenterGroup presenters = new PresenterGroup();
         private RunAutoSaver autoSaver;
@@ -111,8 +118,9 @@ namespace Arknoid.Unity.Installers
             var random = new UnityRandom();
             var level = new LevelModel();
 
-            var ballPresenter = presenters.Add(new BallPresenter(ball, rules, random, audio));
-            var paddlePresenter = presenters.Add(new PaddlePresenter(paddle, ball, input, rules));
+            // Todas las bolas (la de la escena + las extra). Solo se pierde vida cuando no queda ninguna.
+            var balls = presenters.Add(new BallsPresenter(ball, new BallFactory(ball), rules, random, audio));
+            var paddlePresenter = presenters.Add(new PaddlePresenter(paddle, balls, input, rules));
 
             if (screenView != null)
             {
@@ -121,7 +129,7 @@ namespace Arknoid.Unity.Installers
 
             var drops = new PowerUpDropPolicy(
                 rules.powerUpDropChance, rules.maxPowerUpsPerLevel, random, savedLevel?.PowerUpsDropped ?? 0);
-            var powerUpEffect = new ExtraLifeEffect(lives, rules.powerUpExtraLives);
+            var powerUps = ComposePowerUps(drops, random, score, lives, balls, audio);
 
             foreach (var brick in bricks)
             {
@@ -139,19 +147,79 @@ namespace Arknoid.Unity.Installers
                     new BrickModel(hitPoints, brick.ScoreValue),
                     score,
                     level,
-                    drops,
+                    powerUps,
                     audio,
-                    rules.ballDamage,
-                    powerUp => presenters.Add(new PowerUpPresenter(powerUp, powerUpEffect, audio))));
+                    rules.ballDamage));
             }
 
             var flow = presenters.Add(new GameFlowPresenter(
-                lives, score, level, ballPresenter, paddlePresenter, audio, scenes, runs, levels, sceneName));
+                lives, score, level, balls, paddlePresenter, audio, scenes, runs, levels, sceneName));
 
             autoSaver = presenters.Add(new RunAutoSaver(
                 runs, sceneName, layoutSignature, score, lives, level, drops, screenView));
 
             flow.StartRound();
+        }
+
+        /// <summary>
+        /// Registra el efecto de cada tipo de power-up y prepara el spawner que, al romperse un ladrillo,
+        /// elige uno al azar entre todos los prefabs del catálogo.
+        /// </summary>
+        private PowerUpSpawner ComposePowerUps(
+            PowerUpDropPolicy drops,
+            IRandom random,
+            ScoreModel score,
+            LivesModel lives,
+            IBallSpawner balls,
+            IAudioService audio)
+        {
+            if (powerUpCatalog == null)
+            {
+                Debug.LogWarning("[SceneInstaller] No hay PowerUpCatalog asignado: no saldrán power-ups.", this);
+            }
+
+            var settings = powerUpCatalog != null ? powerUpCatalog.Settings : new PowerUpSettings();
+
+            var effects = new PowerUpEffects()
+                .Register(PowerUpType.ExtraLife, new ExtraLifeEffect(lives, settings))
+                .Register(PowerUpType.MultiBallFromStart,
+                    new SpawnBallsEffect(balls, BallSpawnOrigin.BallStart, () => settings.ballsFromStart))
+                .Register(PowerUpType.MultiBallFromBall,
+                    new SpawnBallsEffect(balls, BallSpawnOrigin.ExistingBall, () => settings.ballsFromBall))
+                .Register(PowerUpType.BonusScore, new BonusScoreEffect(score, settings));
+
+            var barrier = CreateBarrier();
+            if (barrier != null)
+            {
+                effects.Register(PowerUpType.Barrier, new BarrierEffect(presenters.Add(new BarrierPresenter(barrier)), settings));
+            }
+
+            var prefabs = powerUpCatalog != null ? powerUpCatalog.Prefabs : (IReadOnlyList<PowerUpView>)new PowerUpView[0];
+            var factory = new PowerUpFactory(prefabs, effects.Supports);
+            var spawner = new PowerUpSpawner(drops, new RandomPowerUpSelector(factory.AvailableTypes, random), factory);
+
+            spawner.Spawned += powerUp =>
+                presenters.Add(new PowerUpPresenter(powerUp, effects.For(powerUp.Type), audio));
+
+            return spawner;
+        }
+
+        private BarrierView CreateBarrier()
+        {
+            var deathZone = GameObject.FindWithTag(deathZoneTag);
+            var collider = deathZone != null ? deathZone.GetComponent<Collider2D>() : null;
+
+            if (collider == null)
+            {
+                Debug.LogWarning($"[SceneInstaller] No hay collider con tag '{deathZoneTag}': el power-up de barrera no estará disponible.", this);
+                return null;
+            }
+
+            return BarrierView.Create(
+                collider.bounds,
+                powerUpCatalog != null ? powerUpCatalog.BarrierThickness : 0.3f,
+                powerUpCatalog != null ? powerUpCatalog.BarrierGap : 0.05f,
+                powerUpCatalog != null ? powerUpCatalog.BarrierColor : new Color(1f, 0.55f, 0.1f, 1f));
         }
 
         /// <summary>

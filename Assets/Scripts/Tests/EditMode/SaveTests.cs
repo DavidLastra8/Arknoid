@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Arknoid.Core.Models;
+using Arknoid.Core.Models.PowerUps;
 using Arknoid.Core.Persistence;
 using Arknoid.Core.Presenters;
 using NUnit.Framework;

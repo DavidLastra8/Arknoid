@@ -5,36 +5,33 @@ using Arknoid.Core.Views;
 
 namespace Arknoid.Core.Presenters
 {
-    /// <summary>Un presenter por ladrillo: aplica daño, suma puntos, suelta power-ups y avisa al nivel.</summary>
+    /// <summary>Un presenter por ladrillo: aplica daño, suma puntos, intenta soltar power-up y avisa al nivel.</summary>
     public class BrickPresenter : IDisposable
     {
         private readonly IBrickView view;
         private readonly BrickModel brick;
         private readonly ScoreModel score;
         private readonly LevelModel level;
-        private readonly PowerUpDropPolicy dropPolicy;
+        private readonly PowerUpSpawner powerUps;
         private readonly IAudioService audio;
         private readonly int damage;
-        private readonly Action<IPowerUpView> onPowerUpSpawned;
 
         public BrickPresenter(
             IBrickView view,
             BrickModel brick,
             ScoreModel score,
             LevelModel level,
-            PowerUpDropPolicy dropPolicy,
+            PowerUpSpawner powerUps,
             IAudioService audio,
-            int damage,
-            Action<IPowerUpView> onPowerUpSpawned)
+            int damage)
         {
             this.view = view;
             this.brick = brick;
             this.score = score;
             this.level = level;
-            this.dropPolicy = dropPolicy;
+            this.powerUps = powerUps;
             this.audio = audio;
             this.damage = damage;
-            this.onPowerUpSpawned = onPowerUpSpawned;
 
             level.Register(view.Id, brick);
             view.HitByBall += OnHitByBall;
@@ -49,11 +46,7 @@ namespace Arknoid.Core.Presenters
 
             if (!brick.TakeHit(damage)) return;
 
-            if (dropPolicy.TryDrop())
-            {
-                var powerUp = view.SpawnPowerUp();
-                if (powerUp != null) onPowerUpSpawned?.Invoke(powerUp);
-            }
+            powerUps.TrySpawnAt(view.Position);
 
             Dispose();
             view.Break();

@@ -7,7 +7,9 @@ Assets/Scripts/
 ├── Core/                      Arknoid.Core.asmdef  (noEngineReferences: C# puro, sin UnityEngine)
 │   ├── Config/                GameRules, SceneNames, LevelSequence
 │   ├── Models/                ScoreModel, LivesModel, BrickModel, LevelModel, PauseModel,
-│   │                          RunData, LevelSnapshot, BrickState, PowerUpDropPolicy, ExtraLifeEffect
+│   │                          RunData, LevelSnapshot, BrickState, WorldPoint
+│   │   └── PowerUps/         PowerUpType, efectos (ExtraLife, SpawnBalls, Barrier, BonusScore),
+│   │                          PowerUpEffects, PowerUpDropPolicy, RandomPowerUpSelector
 │   ├── Persistence/           SaveData, SaveDataBinarySerializer (formato binario, sin E/S de disco)
 │   ├── Views/                 Interfaces de vista: IBallView, IPaddleView, IBrickView, IPowerUpView,
 │   │                          IScoreView, ILivesView, IPauseView, INavigationView, ITrackable
@@ -15,11 +17,14 @@ Assets/Scripts/
 │   │                          IRunRepository, IHighScoreRepository, IRandom, ITimeControl, ITickable…
 │   └── Presenters/            BallPresenter, PaddlePresenter, BrickPresenter, PowerUpPresenter,
 │                              ScorePresenter, LivesPresenter, PausePresenter, NavigationPresenter,
-│                              GameFlowPresenter, RunAutoSaver, PresenterGroup
+│                              GameFlowPresenter, RunAutoSaver, BallsPresenter, BarrierPresenter,
+│                              PowerUpSpawner, PresenterGroup
 ├── Unity/                     Arknoid.Unity.asmdef (depende de Core)
-│   ├── Views/                 MonoBehaviours pasivos: BallView, PaddleView, BrickView, PowerUpView, ScreenView
+│   ├── Views/                 MonoBehaviours pasivos: BallView, PaddleView, BrickView, PowerUpView,
+│   │                          BarrierView, ScreenView
 │   ├── Services/              AudioService, KeyboardInputService, UnitySceneLoader,
-│   │                          BinaryFileSaveService, UnityRandom, UnityTimeControl
+│   │                          BinaryFileSaveService, UnityRandom, UnityTimeControl,
+│   │                          BallFactory, PowerUpFactory, PowerUpCatalog (ScriptableObject)
 │   └── Installers/            SceneInstaller (composition root de cada escena)
 └── Tests/EditMode/            Arknoid.Core.Tests.asmdef: tests de modelos y presenters con fakes
 ```
@@ -94,6 +99,40 @@ Los `OnClick()` de los botones se han reapuntado a `ScreenView`:
 navegación. Los valores de juego (vidas, fuerza de saque, aceleración, probabilidad de power-up…) están en
 `SceneInstaller → Rules`, en el Inspector.
 
+## Power-ups
+
+Todos tienen la misma forma (el mismo prefab base) y se distinguen por el color:
+
+| Color | Prefab | Tipo | Efecto | Valor editable |
+|---|---|---|---|---|
+| Blanco | `PowerUp` | `ExtraLife` | +N vidas | `Extra Lives` |
+| Azul | `PowerUpBlue` | `MultiBallFromStart` | N bolas desde la posición inicial de salida | `Balls From Start` |
+| Verde | `PowerUpGreen` | `MultiBallFromBall` | N bolas desde una bola en juego | `Balls From Ball` |
+| Naranja | `PowerUpOrange` | `Barrier` | Barrera abajo durante N segundos | `Barrier Duration` |
+| Rojo | `PowerUpRed` | `BonusScore` | +N puntos a la partida actual | `Bonus Score` |
+
+**Dónde se editan:** en `Assets/Data/PowerUpCatalog`. Es un único asset para los dos niveles, y los efectos
+leen los valores al aplicarse, así que se pueden ajustar también en Play. En el mismo asset están el color,
+el grosor y la separación de la barrera.
+
+**Cómo sale uno:** al romperse un ladrillo, `PowerUpDropPolicy` decide si sale power-up (probabilidad y máximo
+por nivel, en `SceneInstaller → Rules`). Si sale, `RandomPowerUpSelector` elige **al azar y con la misma
+probabilidad** entre todos los prefabs de la lista del catálogo, y `PowerUpFactory` lo instancia.
+
+**Añadir uno nuevo:**
+1. Un valor nuevo en `PowerUpType` y una clase `IPowerUpEffect`.
+2. Registrarla en `SceneInstaller.ComposePowerUps`.
+3. Duplicar un prefab, cambiarle el color y el `Type`, y añadirlo a `Prefabs` en el catálogo.
+
+**Multibola:** `BallsPresenter` gestiona la bola de la escena y las extra, que son clones de ella y no chocan
+entre sí. Las extra que caen se destruyen, y si cae la principal mientras quedan otras, se esconde hasta el
+siguiente saque. **Solo se pierde una vida cuando cae la última bola en juego.** El modo automático de la pala
+(tecla M) sigue a la bola más baja. Máximo de bolas a la vez: `Rules → Max Balls In Play`.
+
+**Barrera:** `BarrierView` se crea por código justo encima del `DeathCollider`, con su mismo ancho. Es un
+trigger: las bolas rebotan hacia arriba y los power-ups la atraviesan. Si coges otra mientras está activa,
+se renueva la duración.
+
 ## Sistema de guardado (binario)
 
 Se guarda en `Application.persistentDataPath/arknoid.sav`. En Windows es
@@ -144,5 +183,5 @@ Para borrar el guardado mientras desarrollas, elimina `arknoid.sav` de esa carpe
 
 ## Tests
 
-`Window → General → Test Runner → EditMode → Run All`. Hay 22 tests de modelos, presenters y del formato de
+`Window → General → Test Runner → EditMode → Run All`. Hay 32 tests de modelos, presenters, power-ups y del formato de
 guardado, y se ejecutan sin escenas porque usan los fakes de `Tests/EditMode/Fakes.cs`.

@@ -1,4 +1,5 @@
 using System;
+using Arknoid.Core.Models;
 using Arknoid.Core.Views;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -6,8 +7,9 @@ using UnityEngine.Serialization;
 namespace Arknoid.Unity.Views
 {
     /// <summary>
-    /// Vista de un ladrillo. Guarda los datos de diseño del prefab (vida, puntos, power-up)
-    /// y avisa cuando la pelota lo golpea. Ya no usa tags distintos por nivel ("Ball"/"Ball2").
+    /// Vista de un ladrillo. Guarda los datos de diseño del prefab (vida y puntos) y avisa cuando
+    /// una bola lo golpea. Qué power-up sale ya no lo decide el ladrillo: lo elige PowerUpSpawner
+    /// entre todos los del PowerUpCatalog.
     /// </summary>
     public class BrickView : MonoBehaviour, IBrickView
     {
@@ -16,9 +18,6 @@ namespace Arknoid.Unity.Views
 
         [FormerlySerializedAs("brickScore")]
         [SerializeField] private int scoreValue = 10;
-
-        [FormerlySerializedAs("powerUp")]
-        [SerializeField] private GameObject powerUpPrefab;
 
         [Tooltip("Opcional. Si se deja vacío, el ID se genera a partir de la posición en la jerarquía.")]
         [SerializeField] private string persistentId;
@@ -32,17 +31,18 @@ namespace Arknoid.Unity.Views
         public int HitPoints => hitPoints;
         public int ScoreValue => scoreValue;
 
+        public WorldPoint Position
+        {
+            get
+            {
+                var p = transform.position;
+                return new WorldPoint(p.x, p.y, p.z);
+            }
+        }
+
         public void Break()
         {
             Destroy(gameObject);
-        }
-
-        public IPowerUpView SpawnPowerUp()
-        {
-            if (powerUpPrefab == null) return null;
-
-            var instance = Instantiate(powerUpPrefab, transform.position, transform.rotation);
-            return instance.GetComponent<PowerUpView>();
         }
 
         /// <summary>

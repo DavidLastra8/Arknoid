@@ -1,4 +1,5 @@
 using System;
+using Arknoid.Core.Models;
 
 namespace Arknoid.Core.Views
 {
@@ -13,9 +14,9 @@ namespace Arknoid.Core.Views
         int HitPoints { get; }
         int ScoreValue { get; }
 
-        void Break();
+        /// <summary>Donde aparece el power-up si el ladrillo suelta uno.</summary>
+        WorldPoint Position { get; }
 
-        /// <summary>Instancia el power-up en la posición del ladrillo. Devuelve null si no tiene prefab.</summary>
-        IPowerUpView SpawnPowerUp();
+        void Break();
     }
 }

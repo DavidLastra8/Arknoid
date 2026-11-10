@@ -1351,6 +1351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPausing: 0
   uiManager: {fileID: 1846258916}
+  powerUpCatalog: {fileID: 11400000, guid: 47ca110d946a4b63848fb4e7abe025d6, type: 2}
 --- !u!4 &651676702
 Transform:
   m_ObjectHideFlags: 0

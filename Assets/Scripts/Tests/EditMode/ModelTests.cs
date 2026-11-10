@@ -1,4 +1,5 @@
 using Arknoid.Core.Models;
+using Arknoid.Core.Models.PowerUps;
 using NUnit.Framework;
 
 namespace Arknoid.Core.Tests

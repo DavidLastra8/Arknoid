@@ -1,5 +1,6 @@
 using Arknoid.Core.Config;
 using Arknoid.Core.Models;
+using Arknoid.Core.Models.PowerUps;
 using Arknoid.Core.Presenters;
 using Arknoid.Core.Services;
 using NUnit.Framework;
@@ -24,8 +25,7 @@ namespace Arknoid.Core.Tests
             var view = new FakeBrickView { HitPoints = 3, ScoreValue = 10 };
             var score = new ScoreModel(0, 0);
             var level = new LevelModel();
-            var drops = new PowerUpDropPolicy(0f, 0, new FakeRandom());
-            new BrickPresenter(view, new BrickModel(view.HitPoints, view.ScoreValue), score, level, drops, audio, 1, null);
+            new BrickPresenter(view, new BrickModel(view.HitPoints, view.ScoreValue), score, level, NoPowerUps(), audio, 1);
 
             view.Hit();
             view.Hit();
@@ -42,17 +42,35 @@ namespace Arknoid.Core.Tests
             var level = new LevelModel();
             bool cleared = false;
             level.Cleared += () => cleared = true;
-            var drops = new PowerUpDropPolicy(1f, 1, new FakeRandom { NextValue01 = 0f });
-            object spawned = null;
+            var random = new FakeRandom { NextValue01 = 0f };
+            var factory = new FakePowerUpFactory();
+            factory.Types.Add(PowerUpType.BonusScore);
+            var spawner = new PowerUpSpawner(
+                new PowerUpDropPolicy(1f, 1, random), new RandomPowerUpSelector(factory.Types, random), factory);
+            SpawnedPowerUp spawned = new SpawnedPowerUp();
+            spawner.Spawned += p => spawned.View = p;
 
-            new BrickPresenter(view, new BrickModel(1, 10), new ScoreModel(0, 0), level, drops, audio, 1, p => spawned = p);
+            new BrickPresenter(view, new BrickModel(1, 10), new ScoreModel(0, 0), level, spawner, audio, 1);
             view.Hit();
             view.Hit(); // ya está roto: no debe contar dos veces
 
             Assert.IsTrue(view.Broken);
             Assert.IsTrue(cleared);
-            Assert.AreEqual(1, view.SpawnCount);
-            Assert.AreSame(view.NextPowerUp, spawned);
+            Assert.AreEqual(1, factory.Created.Count);
+            Assert.AreEqual(PowerUpType.BonusScore, spawned.View.Type);
+            Assert.AreEqual(view.Position.X, factory.LastPosition.X);
+        }
+
+        private class SpawnedPowerUp
+        {
+            public Views.IPowerUpView View;
+        }
+
+        private static PowerUpSpawner NoPowerUps()
+        {
+            var random = new FakeRandom();
+            var factory = new FakePowerUpFactory();
+            return new PowerUpSpawner(new PowerUpDropPolicy(0f, 0, random), new RandomPowerUpSelector(factory.Types, random), factory);
         }
 
         [Test]
@@ -60,7 +78,7 @@ namespace Arknoid.Core.Tests
         {
             var view = new FakePowerUpView();
             var lives = new LivesModel(1);
-            new PowerUpPresenter(view, new ExtraLifeEffect(lives, 1), audio);
+            new PowerUpPresenter(view, new ExtraLifeEffect(lives, new PowerUpSettings { extraLives = 1 }), audio);
 
             view.Collect();
 
@@ -73,7 +91,7 @@ namespace Arknoid.Core.Tests
         public void Ball_LaunchesAfterDelayAndSpeedsUpUntilLimit()
         {
             var view = new FakeBallView();
-            var presenter = new BallPresenter(view, rules, new FakeRandom(), audio);
+            var presenter = new BallsPresenter(view, new FakeBallFactory(), rules, new FakeRandom(), audio);
 
             presenter.Serve();
             presenter.Tick(rules.relaunchDelay * 0.5f);

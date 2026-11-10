@@ -1,7 +1,7 @@
 using System;
 using Arknoid.Core.Services;
 
-namespace Arknoid.Core.Models
+namespace Arknoid.Core.Models.PowerUps
 {
     /// <summary>Decide si un ladrillo roto suelta power-up (probabilidad + máximo por nivel).</summary>
     public class PowerUpDropPolicy

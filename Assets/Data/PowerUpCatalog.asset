@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404c3acc7148491d9e1440d328af7418, type: 3}
+  m_Name: PowerUpCatalog
+  m_EditorClassIdentifier: 
+  settings:
+    extraLives: 1
+    ballsFromStart: 2
+    ballsFromBall: 2
+    barrierDuration: 8
+    bonusScore: 100
+  prefabs:
+  - {fileID: 4803471924252417405, guid: 7a8a9054908acdc4ca5140ccf74df20a, type: 3}
+  - {fileID: 4803471924252417405, guid: 3ecf1f3d48e842e6b3f75e6fb91489b8, type: 3}
+  - {fileID: 4803471924252417405, guid: 4447f720148c4daea7e4af493b2a58c5, type: 3}
+  - {fileID: 4803471924252417405, guid: caa85ab64ad942ad9d0f0d5ba329134f, type: 3}
+  - {fileID: 4803471924252417405, guid: 03f96583ef0a4ff887715d1498d5ea31, type: 3}
+  barrierColor: {r: 1, g: 0.55, b: 0.1, a: 1}
+  barrierThickness: 0.3
+  barrierGap: 0.05

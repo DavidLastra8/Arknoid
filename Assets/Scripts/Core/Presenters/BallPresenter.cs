@@ -5,23 +5,21 @@ using Arknoid.Core.Views;
 
 namespace Arknoid.Core.Presenters
 {
-    /// <summary>Reglas de la pelota: saque con retardo, aceleración en cada rebote y aviso al caer.</summary>
-    public class BallPresenter : IBallController, ITickable, IDisposable
+    /// <summary>
+    /// Reglas de UNA bola: lanzarla, acelerarla en cada rebote y avisar cuando cae.
+    /// Qué pasa cuando cae (quitarla o perder una vida) lo decide BallsPresenter.
+    /// </summary>
+    public class BallPresenter : IDisposable
     {
-        public event Action BallLost;
+        public event Action<BallPresenter> Lost;
 
-        private readonly IBallView view;
         private readonly GameRules rules;
-        private readonly IRandom random;
         private readonly IAudioService audio;
 
-        private float launchCountdown = -1f;
-
-        public BallPresenter(IBallView view, GameRules rules, IRandom random, IAudioService audio)
+        public BallPresenter(IBallView view, GameRules rules, IAudioService audio)
         {
-            this.view = view;
+            View = view;
             this.rules = rules;
-            this.random = random;
             this.audio = audio;
 
             view.Bounced += OnBounced;
@@ -29,49 +27,48 @@ namespace Arknoid.Core.Presenters
             view.HitDeathZone += OnHitDeathZone;
         }
 
-        public bool IsWaitingToLaunch => launchCountdown >= 0f;
+        public IBallView View { get; }
 
-        public void Serve()
+        /// <summary>Lanzada y todavía no ha caído.</summary>
+        public bool IsInPlay { get; private set; }
+
+        public void Launch(IRandom random)
         {
-            view.ResetToStart();
-            launchCountdown = rules.relaunchDelay;
+            View.Launch(random.Range(-1f, 1f), 1f, rules.launchForce);
+            IsInPlay = true;
         }
 
-        public void Stop()
+        /// <summary>Vuelve a la salida, parada, a la espera de un nuevo saque.</summary>
+        public void Park()
         {
-            launchCountdown = -1f;
-            view.ResetToStart();
-        }
-
-        public void Tick(float deltaTime)
-        {
-            if (!IsWaitingToLaunch) return;
-
-            launchCountdown -= deltaTime;
-            if (launchCountdown <= 0f)
-            {
-                launchCountdown = -1f;
-                view.Launch(random.Range(-1f, 1f), 1f, rules.launchForce);
-            }
+            IsInPlay = false;
+            View.ResetToStart();
         }
 
         private void OnBounced()
         {
-            if (view.Speed <= rules.maxSpeedForSpeedUp)
+            if (View.Speed <= rules.maxSpeedForSpeedUp)
             {
-                view.MultiplyVelocity(rules.speedUpFactor);
+                View.MultiplyVelocity(rules.speedUpFactor);
             }
         }
 
         private void OnHitPaddle() => audio.Play(GameSound.Hit);
 
-        private void OnHitDeathZone() => BallLost?.Invoke();
+        private void OnHitDeathZone()
+        {
+            // Una bola puede tocar la zona dos veces antes de desaparecer: solo cuenta la primera.
+            if (!IsInPlay) return;
+
+            IsInPlay = false;
+            Lost?.Invoke(this);
+        }
 
         public void Dispose()
         {
-            view.Bounced -= OnBounced;
-            view.HitPaddle -= OnHitPaddle;
-            view.HitDeathZone -= OnHitDeathZone;
+            View.Bounced -= OnBounced;
+            View.HitPaddle -= OnHitPaddle;
+            View.HitDeathZone -= OnHitDeathZone;
         }
     }
 }

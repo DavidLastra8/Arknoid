@@ -1,5 +1,6 @@
 using System;
 using Arknoid.Core.Models;
+using Arknoid.Core.Models.PowerUps;
 using Arknoid.Core.Services;
 using Arknoid.Core.Views;
 
