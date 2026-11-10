@@ -77,6 +77,14 @@ namespace Arknoid.Unity.EditorTests
             }
         }
 
+        [Test]
+        public void Ball_UsesContinuousCollisionDetection()
+        {
+            var ball = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Circle.prefab");
+            Assert.AreEqual(CollisionDetectionMode2D.Continuous, ball.GetComponent<Rigidbody2D>().collisionDetectionMode,
+                "Con 'Discrete' la bola puede atravesar la barrera (o un ladrillo) a mucha velocidad");
+        }
+
         [TestCase("Assets/Scenes/Lvl1.unity")]
         [TestCase("Assets/Scenes/Lvl2.unity")]
         public void LevelScenes_HaveTheCatalogAssigned(string scenePath)

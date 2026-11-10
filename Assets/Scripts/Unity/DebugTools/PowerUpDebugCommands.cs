@@ -17,7 +17,7 @@ namespace Arknoid.Unity.DebugTools
     /// <summary>
     /// Comandos para generar power-ups en un nivel y comprobar que funcionan.
     ///
-    ///   F1        Mostrar u ocultar el panel
+    ///   F1        Mostrar u ocultar el panel (empieza oculto)
     ///   1 … 5     Power-up blanco, azul, verde, naranja o rojo encima de la pala (cae y lo recoges)
     ///   0         Los 5 a la vez encima de la pala (prueba de varios seguidos)
     ///   Shift+1…5 El power-up cae desde arriba del todo, con el juego normal
@@ -39,7 +39,8 @@ namespace Arknoid.Unity.DebugTools
 
         private static readonly string[] Labels = { "Blanco (+vida)", "Azul (bolas salida)", "Verde (bolas bola)", "Naranja (barrera)", "Rojo (+puntos)" };
 
-        private bool showPanel = true;
+        // Empieza oculto; F1 lo muestra. Las teclas funcionan igual con el panel oculto.
+        private bool showPanel;
         private string lastMessage = "";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]

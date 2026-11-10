@@ -80,7 +80,7 @@ namespace Arknoid.PlayMode.Tests
             };
 
             barrier = presenters.Add(new BarrierPresenter(
-                BarrierView.Create(deathCollider, 0.3f, 0.05f, new Color(1f, 0.55f, 0.1f, 1f))));
+                BarrierView.Create(deathCollider, 0.3f, 0.05f, new Color(1f, 0.55f, 0.1f, 1f), mainBall.gameObject.layer)));
 
             effects = new PowerUpEffects()
                 .Register(PowerUpType.ExtraLife, new ExtraLifeEffect(lives, settings))
@@ -176,7 +176,14 @@ namespace Arknoid.PlayMode.Tests
         public IEnumerator BallAtDoubleMaxSpeed_StillDoesNotTunnelThroughBarrier()
         {
             // Margen de seguridad: la bola nunca llega a esta velocidad en el juego.
+            // Fallaba cuando la barrera era un trigger y la bola usaba detección "Discrete".
             yield return BarrierStopsBallAt(2f * rules.maxSpeedForSpeedUp * rules.speedUpFactor);
+        }
+
+        [UnityTest]
+        public IEnumerator BallAtFourTimesMaxSpeed_StillDoesNotTunnelThroughBarrier()
+        {
+            yield return BarrierStopsBallAt(4f * rules.maxSpeedForSpeedUp * rules.speedUpFactor);
         }
 
         /// <summary>
@@ -195,7 +202,7 @@ namespace Arknoid.PlayMode.Tests
             zone.gameObject.tag = "DeathCollider";
 
             parent.transform.localScale = Vector3.zero; // como el Canvas en el archivo de escena
-            var view = BarrierView.Create(zone, 0.3f, 0.05f, Color.white);
+            var view = BarrierView.Create(zone, 0.3f, 0.05f, Color.white, mainBall.gameObject.layer);
             var presenter = presenters.Add(new BarrierPresenter(view));
 
             parent.transform.localScale = Vector3.one; // el Canvas se escala en tiempo de ejecución

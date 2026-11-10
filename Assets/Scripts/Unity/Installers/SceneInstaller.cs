@@ -228,7 +228,8 @@ namespace Arknoid.Unity.Installers
                 collider,
                 powerUpCatalog != null ? powerUpCatalog.BarrierThickness : 0.3f,
                 powerUpCatalog != null ? powerUpCatalog.BarrierGap : 0.05f,
-                powerUpCatalog != null ? powerUpCatalog.BarrierColor : new Color(1f, 0.55f, 0.1f, 1f));
+                powerUpCatalog != null ? powerUpCatalog.BarrierColor : new Color(1f, 0.55f, 0.1f, 1f),
+                ball.gameObject.layer);
         }
 
         /// <summary>

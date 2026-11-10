@@ -5,8 +5,13 @@ using UnityEngine;
 namespace Arknoid.Unity.Views
 {
     /// <summary>
-    /// Barrera naranja. Es un trigger: las bolas rebotan (BarrierPresenter les invierte la velocidad)
-    /// y los power-ups la atraviesan, así que no se quedan atascados encima.
+    /// Barrera naranja. Es un collider SÓLIDO en la misma capa que las bolas: rebotan en ella con la física
+    /// normal (y BarrierPresenter se asegura de que salgan hacia arriba). Los power-ups la atraviesan porque
+    /// la matriz de colisiones 2D del proyecto no hace chocar la capa de las bolas con la de los power-ups.
+    ///
+    /// Antes era un trigger, pero Box2D no aplica detección continua a los triggers, y a mucha velocidad
+    /// la bola la atravesaba entre dos pasos de física. Con un collider sólido y la bola en "Continuous"
+    /// eso ya no puede pasar.
     ///
     /// Se coloca justo encima del DeathCollider y con su mismo ancho. IMPORTANTE: el tamaño se calcula
     /// al activarse y se reajusta cada frame mientras está activa, no al crearla. El DeathCollider está
@@ -33,10 +38,10 @@ namespace Arknoid.Unity.Views
 
         private void LateUpdate() => FitAboveDeathZone();
 
-        private void OnTriggerEnter2D(Collider2D other) => Notify(other);
+        private void OnCollisionEnter2D(Collision2D collision) => Notify(collision.collider);
 
-        // Por si la barrera se activa con una bola ya dentro.
-        private void OnTriggerStay2D(Collider2D other) => Notify(other);
+        // Por si una bola se queda apoyada encima con poca velocidad: el presenter la empuja hacia arriba.
+        private void OnCollisionStay2D(Collision2D collision) => Notify(collision.collider);
 
         private void Notify(Collider2D other)
         {
@@ -49,11 +54,15 @@ namespace Arknoid.Unity.Views
             if (deathZone == null) return;
 
             var zone = WorldRect(deathZone);
-            transform.position = new Vector3(
+            var position = new Vector3(
                 (zone.xMin + zone.xMax) * 0.5f,
                 zone.yMax + gap + thickness * 0.5f,
                 deathZone.transform.position.z);
-            transform.localScale = new Vector3(zone.width, thickness, 1f);
+            var scale = new Vector3(zone.width, thickness, 1f);
+
+            // Solo se toca el transform si ha cambiado: mover un collider obliga a la física a recalcularlo.
+            if (transform.position != position) transform.position = position;
+            if (transform.localScale != scale) transform.localScale = scale;
         }
 
         /// <summary>
@@ -85,10 +94,13 @@ namespace Arknoid.Unity.Views
             return Rect.MinMaxRect(b.min.x, b.min.y, b.max.x, b.max.y);
         }
 
-        /// <summary>Crea la barrera (oculta hasta que se active) asociada a <paramref name="deathZone"/>.</summary>
-        public static BarrierView Create(Collider2D deathZone, float thickness, float gap, Color color)
+        /// <summary>
+        /// Crea la barrera (oculta hasta que se active) asociada a <paramref name="deathZone"/>.
+        /// <paramref name="ballLayer"/> es la capa de las bolas: así rebotan en ella y los power-ups no.
+        /// </summary>
+        public static BarrierView Create(Collider2D deathZone, float thickness, float gap, Color color, int ballLayer)
         {
-            var go = new GameObject("Barrier");
+            var go = new GameObject("Barrier") { layer = ballLayer };
 
             var sprite = go.AddComponent<SpriteRenderer>();
             sprite.sprite = WhiteSprite();
@@ -97,7 +109,7 @@ namespace Arknoid.Unity.Views
 
             // Se añade antes que BarrierView, así RequireComponent ya lo encuentra.
             var box = go.AddComponent<BoxCollider2D>();
-            box.isTrigger = true;
+            box.isTrigger = false;
             box.size = Vector2.one;
 
             var view = go.AddComponent<BarrierView>();

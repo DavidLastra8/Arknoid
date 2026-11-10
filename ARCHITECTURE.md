@@ -129,9 +129,7 @@ entre sí. Las extra que caen se destruyen, y si cae la principal mientras queda
 siguiente saque. **Solo se pierde una vida cuando cae la última bola en juego.** El modo automático de la pala
 (tecla M) sigue a la bola más baja. Máximo de bolas a la vez: `Rules → Max Balls In Play`.
 
-**Barrera:** `BarrierView` se crea por código justo encima del `DeathCollider`, con su mismo ancho. Es un
-trigger: las bolas rebotan hacia arriba y los power-ups la atraviesan. Si coges otra mientras está activa,
-se renueva la duración.
+**Barrera:** `BarrierView` se crea por código encima del `DeathCollider`, con su mismo ancho. Se mide al activarse y se reajusta mientras está activa. Es un collider **sólido** en la capa de las bolas: rebotan con la física normal, y los power-ups la atraviesan porque la matriz de colisiones 2D no hace chocar esa capa con la suya. Si coges otra mientras está activa, se renueva la duración. La bola (`Circle.prefab`) usa detección de colisiones **Continuous** para no atravesarla a mucha velocidad.
 
 ## Sistema de guardado (binario)
 
@@ -188,8 +186,8 @@ Abre `Window → General → Test Runner`. Hay tres grupos:
 | Pestaña | Assembly | Qué prueba |
 |---|---|---|
 | **EditMode** | `Arknoid.Core.Tests` (48) | Modelos y presenters con fakes, sin escenas. `GameplayScenarioTests` conecta los presenters reales como en `SceneInstaller` y prueba combinaciones: 5 power-ups en el mismo frame, multibolas hasta el límite, bolas que caen a la vez, power-ups recogidos justo tras un game over o un nivel superado, valores negativos en el catálogo… |
-| **EditMode** | `Arknoid.Unity.EditorTests` (6) | Assets: el catálogo tiene un prefab por tipo, todos con la misma forma pero distinto color, las bolas no chocan con los power-ups (matriz de capas) y Lvl1/Lvl2 tienen el catálogo asignado. |
-| **PlayMode** | `Arknoid.PlayMode.Tests` (14) | **Física real** en un mini-nivel creado por código con los prefabs reales. Comprueba que las bolas no se quedan pegadas al `DeathCollider`, que las extra se destruyen al caer, que la barrera para la bola incluso al doble de la velocidad máxima, que los power-ups la atraviesan y no se quedan atrapados, y que se pueden recoger 5 a la vez. Además hay un *smoke test* que carga Lvl1 y Lvl2 (con un guardado temporal, para no pisar el tuyo). |
+| **EditMode** | `Arknoid.Unity.EditorTests` (7) | Assets: el catálogo tiene un prefab por tipo, todos con la misma forma pero distinto color, las bolas no chocan con los power-ups (matriz de capas) y Lvl1/Lvl2 tienen el catálogo asignado. |
+| **PlayMode** | `Arknoid.PlayMode.Tests` (15) | **Física real** en un mini-nivel creado por código con los prefabs reales. Comprueba que las bolas no se quedan pegadas al `DeathCollider`, que las extra se destruyen al caer, que la barrera para la bola incluso a 4 veces la velocidad máxima, que los power-ups la atraviesan y no se quedan atrapados, y que se pueden recoger 5 a la vez. Además hay un *smoke test* que carga Lvl1 y Lvl2 (con un guardado temporal, para no pisar el tuyo). |
 
 Errores que encontraron estos tests y ya están corregidos:
 - Un multibola recogido en el mismo frame en que acaba la partida creaba bolas después del `Stop()`.
@@ -211,7 +209,7 @@ Solo existe en el editor y en las Development Builds.
 
 | Tecla | Acción |
 |---|---|
-| `F1` | Mostrar u ocultar el panel (también tiene botones) |
+| `F1` | Mostrar u ocultar el panel, que tiene botones y empieza oculto |
 | `1` … `5` | Power-up blanco, azul, verde, naranja o rojo justo encima de la pala |
 | `Shift` + `1` … `5` | El mismo, pero cayendo desde arriba |
 | `0` | Los 5 a la vez |
