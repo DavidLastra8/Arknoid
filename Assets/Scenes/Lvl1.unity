@@ -1018,6 +1018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPausing: 0
   uiManager: {fileID: 1483124131}
+  powerUpCatalog: {fileID: 11400000, guid: 47ca110d946a4b63848fb4e7abe025d6, type: 2}
 --- !u!1 &261612892
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,8 +1294,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1483124131}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ResetGame
+        m_TargetAssemblyTypeName: Arknoid.Unity.Views.ScreenView, Arknoid.Unity
+        m_MethodName: OnMainMenuClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4499,8 +4500,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1483124131}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: Continue
+        m_TargetAssemblyTypeName: Arknoid.Unity.Views.ScreenView, Arknoid.Unity
+        m_MethodName: OnResumeClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
